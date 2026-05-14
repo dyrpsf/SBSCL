@@ -4,19 +4,18 @@ import org.simulator.math.odes.MultiTable;
 
 /**
  * A utility designed to compress high-density simulation time-series data
- * into token-efficient summaries for Large Language Model (LLM) consumption.
- * Part of the gsoc-sysbio-llm-tools initiative.
+ * into concise, readable summaries.
  */
-public class LLMSimulationTraceCompressor {
+public class SimulationTraceCompressor {
 
     /**
-     * Compresses a full simulation MultiTable into a token-optimized summary.
+     * Compresses a full simulation MultiTable into a condensed summary.
      * Extracts initial values, peak values, and final steady states.
      *
      * @param table The simulation results MultiTable
-     * @return A token-efficient String representation for LLM prompts
+     * @return A condensed String representation of the simulation trace
      */
-    public static String compressForLLM(MultiTable table) {
+    public static String generateSummary(MultiTable table) {
         if (table == null || table.getRowCount() == 0) {
             return "Simulation data is empty.";
         }
@@ -24,10 +23,10 @@ public class LLMSimulationTraceCompressor {
         int numRows = table.getRowCount();
         int numCols = table.getColumnCount();
 
-        StringBuilder llmSummary = new StringBuilder();
-        llmSummary.append("Simulation Summary (Token-Optimized):\n");
-        llmSummary.append("Total Time Steps: ").append(numRows).append("\n");
-        llmSummary.append("Time Range: [").append(table.getTimePoint(0))
+        StringBuilder summary = new StringBuilder();
+        summary.append("Simulation Summary:\n");
+        summary.append("Total Time Steps: ").append(numRows).append("\n");
+        summary.append("Time Range: [").append(table.getTimePoint(0))
                   .append(", ").append(table.getTimePoint(numRows - 1)).append("]\n\n");
 
         // Skip index 0 if it represents the Time column
@@ -54,10 +53,10 @@ public class LLMSimulationTraceCompressor {
                 }
             }
 
-            llmSummary.append(String.format("- %s: Init:%.2f | Final:%.2f | Peak:%.2f @ t=%.2f | Min:%.2f\n", 
+            summary.append(String.format("- %s: Init:%.2f | Final:%.2f | Peak:%.2f @ t=%.2f | Min:%.2f\n", 
                                             species, initial, finalVal, max, timeOfMax, min));
         }
 
-        return llmSummary.toString();
+        return summary.toString();
     }
 }

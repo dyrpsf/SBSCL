@@ -1,15 +1,15 @@
 package org.simulator.math;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mockito;
 import org.simulator.math.odes.MultiTable;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-public class LLMSimulationTraceCompressorTest {
+public class SimulationTraceCompressorTest {
 
     @Test
-    public void testCompressForLLM() {
+    public void testGenerateSummary() {
         // Create a Mock MultiTable
         MultiTable mockTable = Mockito.mock(MultiTable.class);
 
@@ -32,17 +32,27 @@ public class LLMSimulationTraceCompressorTest {
         Mockito.when(mockTable.getValueAt(2, 1)).thenReturn(5.0);
 
         // Run your new compressor!
-        String result = LLMSimulationTraceCompressor.compressForLLM(mockTable);
+        String result = SimulationTraceCompressor.generateSummary(mockTable);
 
         // Print it to the console so you can see your own work
-        System.out.println("=== AI TRACE OUTPUT ===");
+        System.out.println("=== SUMMARY OUTPUT ===");
         System.out.println(result);
         System.out.println("=======================");
 
         // Verify the output contains the correct compressed insights
-        assertTrue(result.contains("Total Time Steps: 3"), "Should contain row count");
-        assertTrue(result.contains("Species_A: Init:10.00"), "Should contain initial value");
-        assertTrue(result.contains("Peak:50.00 @ t=1.00"), "Should contain peak value and exact time");
-        assertTrue(result.contains("Final:5.00"), "Should contain final steady-state value");
+        assertTrue("Should contain row count", result.contains("Total Time Steps: 3"));
+        assertTrue("Should contain initial value", result.contains("Species_A: Init:10.00"));
+        assertTrue("Should contain peak value and exact time", result.contains("Peak:50.00 @ t=1.00"));
+        assertTrue("Should contain final steady-state value", result.contains("Final:5.00"));
+    }
+
+    @Test
+    public void testEmptyTableHandling() {
+        MultiTable emptyTable = Mockito.mock(MultiTable.class);
+        Mockito.when(emptyTable.getRowCount()).thenReturn(0);
+
+        String result = SimulationTraceCompressor.generateSummary(emptyTable);
+
+        assertTrue("Should handle empty tables gracefully", result.contains("Simulation data is empty."));
     }
 }
