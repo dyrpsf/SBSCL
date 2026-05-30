@@ -18,18 +18,18 @@ public class SimulationTraceCompressorTest {
         Mockito.when(mockTable.getColumnCount()).thenReturn(2);
         
         // Mock time points
-        Mockito.when(mockTable.getTimePoint(0)).thenReturn(0.0);
-        Mockito.when(mockTable.getTimePoint(1)).thenReturn(1.0);
-        Mockito.when(mockTable.getTimePoint(2)).thenReturn(2.0);
+        Mockito.when(mockTable.getTimePoint(0)).thenReturn(0d);
+        Mockito.when(mockTable.getTimePoint(1)).thenReturn(1d);
+        Mockito.when(mockTable.getTimePoint(2)).thenReturn(2d);
 
         // Mock column names
         Mockito.when(mockTable.getColumnName(0)).thenReturn("Time");
         Mockito.when(mockTable.getColumnName(1)).thenReturn("Species_A");
         
         // Give Species A some data: Starts at 10, peaks at 50, ends at 5
-        Mockito.when(mockTable.getValueAt(0, 1)).thenReturn(10.0);
-        Mockito.when(mockTable.getValueAt(1, 1)).thenReturn(50.0);
-        Mockito.when(mockTable.getValueAt(2, 1)).thenReturn(5.0);
+        Mockito.when(mockTable.getValueAt(0, 1)).thenReturn(10d);
+        Mockito.when(mockTable.getValueAt(1, 1)).thenReturn(50d);
+        Mockito.when(mockTable.getValueAt(2, 1)).thenReturn(5d);
 
         // Run your new compressor!
         String result = SimulationTraceCompressor.generateSummary(mockTable);
